@@ -116,7 +116,7 @@ func (c *Client) Message(ctx context.Context, id string, expanded bool) (Message
 	return resp, c.do(req, &resp)
 }
 
-// Raw message returns the RFC-2822 message.
+// RawMessage returns the raw message in RFC-2822 format.
 func (c *Client) RawMessage(ctx context.Context, id string) ([]byte, error) {
 	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages/"+id, nil)
 	if err != nil {

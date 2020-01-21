@@ -1,0 +1,29 @@
+run:
+  skip-dirs:
+    - testdata
+  deadline: 240s
+  tests: false
+  #modules-download-mode: vendor # for go.mod based
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - golint
+    - varcheck
+    - structcheck
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - unconvert
+    - goimports
+    - misspell
+    - lll
+    - nakedret
+    - gocritic
+
+linters-settings:
+  lll:
+    line-length: 120
+issues:
+  exclude-use-default: false
