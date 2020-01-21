@@ -101,7 +101,7 @@ The following features are implemented in the client:
 
 ### Messages
 
-- [ ] GET	/messages
+- [x] GET	/messages
 - [ ] GET	/messages/{id}
 - [ ] PUT	/messages/{id}
 - [ ] GET	/messages/{id} (raw message content)

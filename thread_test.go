@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -33,9 +32,7 @@ func TestThreads(t *testing.T) {
 	}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
-		if gotQuery := r.URL.Query(); !reflect.DeepEqual(gotQuery, wantQuery) {
-			t.Errorf("query params:\ngot:\n%#v\nwant:\n%+v", gotQuery, wantQuery)
-		}
+		assertQueryParams(t, r, wantQuery)
 		_, _ = w.Write(threadsJSON)
 	}))
 	defer ts.Close()

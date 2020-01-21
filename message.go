@@ -3,6 +3,8 @@ package nylas
 import (
 	"context"
 	"net/http"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Message contains all the details of a single email message.
@@ -41,13 +43,56 @@ type Message struct {
 	Unread  bool `json:"unread"`
 }
 
+// MessagesOptions provides optional parameters to the Messages method.
+type MessagesOptions struct {
+	View   string `url:"view,omitempty"`
+	Limit  int    `url:"limit,omitempty"`
+	Offset int    `url:"offset,omitempty"`
+	// Return messages with a matching literal subject
+	Subject string `url:"subject,omitempty"`
+	// Return messages that have been sent or received from the list of
+	// email addresses. A maximum of 25 emails may be specified
+	AnyEmail []string `url:"any_email,comma,omitempty"`
+	// Return  messages sent to this email address
+	To string `url:"to,omitempty"`
+	// Return  messages sent from this email address
+	From string `url:"from,omitempty"`
+	// Return  messages that were CC'd to this email address
+	CC string `url:"cc,omitempty"`
+	// Return messages that were BCC'd to this email address, likely sent
+	// from the parent account.
+	// (Most SMTP gateways remove BCC information.)
+	BCC string `url:"bcc,omitempty"`
+	// Return messages in a given folder, or with a given label.
+	// This parameter supports the name, display_name, or id of a folder or
+	// label.
+	In      string `url:"in,omitempty"`
+	Unread  bool   `url:"unread,omitempty"`
+	Starred bool   `url:"starred,omitempty"`
+	// Return messages belonging to a specific thread
+	ThreadID string `url:"thread_id,omitempty"`
+	Filename string `url:"filename,omitempty"`
+	// Return messages received before this Unix-based timestamp.
+	ReceivedBefore int64 `url:"received_before,omitempty"`
+	// Return messages received after this Unix-based timestamp.
+	ReceivedAfter int64 `url:"received_after,omitempty"`
+	HasAttachment bool  `url:"has_attachment,omitempty"`
+}
+
 // Messages returns messages which match the filter specified by parameters.
-// TODO: params
 // See: https://docs.nylas.com/reference#messages-1
-func (c *Client) Messages(ctx context.Context) ([]Message, error) {
+func (c *Client) Messages(ctx context.Context, opts *MessagesOptions) ([]Message, error) {
 	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages", nil)
 	if err != nil {
 		return nil, err
+	}
+
+	if opts != nil {
+		vs, err := query.Values(opts)
+		if err != nil {
+			return nil, err
+		}
+		appendQueryValues(req, vs)
 	}
 
 	var resp []Message
