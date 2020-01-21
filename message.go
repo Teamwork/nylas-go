@@ -2,7 +2,9 @@ package nylas
 
 import (
 	"context"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/google/go-querystring/query"
 )
@@ -37,7 +39,7 @@ type Message struct {
 	Events []interface{} `json:"events"`
 	Files  []File        `json:"files"`
 	Folder Folder        `json:"folder"`
-	Labels []Label       `json:"label"`
+	Labels []Label       `json:"labels"`
 
 	Starred bool `json:"starred"`
 	Unread  bool `json:"unread"`
@@ -97,4 +99,41 @@ func (c *Client) Messages(ctx context.Context, opts *MessagesOptions) ([]Message
 
 	var resp []Message
 	return resp, c.do(req, &resp)
+}
+
+// Message returns a message by id.
+func (c *Client) Message(ctx context.Context, id string, expanded bool) (Message, error) {
+	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages/"+id, nil)
+	if err != nil {
+		return Message{}, err
+	}
+
+	if expanded {
+		appendQueryValues(req, url.Values{"view": {ViewExpanded}})
+	}
+
+	var resp Message
+	return resp, c.do(req, &resp)
+}
+
+// Raw message returns the RFC-2822 message.
+func (c *Client) RawMessage(ctx context.Context, id string) ([]byte, error) {
+	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages/"+id, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Accept", "message/rfc822")
+
+	resp, err := c.c.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close() // nolint: errcheck
+
+	if resp.StatusCode >= 299 {
+		return nil, NewError(resp)
+	}
+
+	return ioutil.ReadAll(resp.Body)
 }

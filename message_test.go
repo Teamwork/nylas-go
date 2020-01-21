@@ -110,6 +110,114 @@ func TestMessages(t *testing.T) {
 	}
 }
 
+func TestMessage(t *testing.T) {
+	accessToken := "accessToken"
+	wantQuery := url.Values{
+		"view": {"expanded"},
+	}
+	id := "br57kcekhf1hsjq04y8aonkit"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertQueryParams(t, r, wantQuery)
+		if r.URL.Path != "/messages/"+id {
+			t.Errorf("unexpected path: %v", r.URL.Path)
+		}
+		_, _ = w.Write(getMessageJSON)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.Message(context.Background(), id, true)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := Message{
+		AccountID: "crkr5ct7aa3edvipotbj****",
+		BCC:       []Participant{},
+		Body:      "<div dir=\"ltr\">Body</div>",
+		CC:        []Participant{},
+		Date:      1579611155,
+		Events:    []interface{}{},
+		Files:     []File{},
+		From: []Participant{
+			{
+				Email: "from@example.org",
+				Name:  "From Name",
+			},
+		},
+		Headers: struct {
+			InReplyTo  string   `json:"In-Reply-To"`
+			MessageID  string   `json:"Message-Id"`
+			References []string `json:"References"`
+		}{
+			InReplyTo:  "",
+			MessageID:  "<CAGkcA6KLq8q4bETj8+BhMLms1JrvaJ+5SvJVVz+u_Ok0y=iEoA@mail.gmail.com>",
+			References: []string{},
+		},
+		ID: "br57kcekhf1hsjq04y8aonkit",
+		Labels: []Label{
+			{
+				DisplayName: "Important",
+				ID:          "a1ytpbvawxfaqua671478g1q0",
+				Name:        "important",
+			},
+			{
+				DisplayName: "Inbox",
+				ID:          "atamsqdb355jqyj0zhhatu3ao",
+				Name:        "inbox",
+			},
+		},
+		Object:   "message",
+		ReplyTo:  []Participant{},
+		Snippet:  "Body",
+		Starred:  true,
+		Subject:  "Subject",
+		ThreadID: "8r5awu0esbg8ct3wg5rj5sifp",
+		To: []Participant{
+			{
+				Email: "to@example.org",
+				Name:  "To Name",
+			},
+		},
+		Unread: true,
+	}
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("Message: (-got +want):\n%s", diff)
+	}
+}
+
+func TestRawMessage(t *testing.T) {
+	accessToken := "accessToken"
+	id := "br57kcekhf1hsjq04y8aonkit"
+	want := []byte(`Delivered-To: to@example.org
+Received: by 2002:ab3:5e90:0:0:0:0:0 with SMTP id k16csp2294558TLC;
+	Tue, 21 Jan 2020 04:52:47 -0800 (PST)
+.......`)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		if r.URL.Path != "/messages/"+id {
+			t.Errorf("unexpected path: %v", r.URL.Path)
+		}
+		if v := r.Header.Get("Accept"); v != "message/rfc822" {
+			t.Errorf("missing/incorrect accept header: %v", v)
+		}
+		_, _ = w.Write(want)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.RawMessage(context.Background(), id)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("Message: (-got +want):\n%s", diff)
+	}
+}
+
 var messagesJSON = []byte(`[
     {
 	"account_id": "43jf****",
@@ -151,3 +259,50 @@ var messagesJSON = []byte(`[
 	"unread": true
     }
 ]`)
+
+var getMessageJSON = []byte(`{
+  "account_id": "crkr5ct7aa3edvipotbj****",
+  "bcc": [],
+  "body": "<div dir=\"ltr\">Body</div>",
+  "cc": [],
+  "date": 1579611155,
+  "events": [],
+  "files": [],
+  "from": [
+    {
+      "email": "from@example.org",
+      "name": "From Name"
+    }
+  ],
+  "headers": {
+    "In-Reply-To": null,
+    "Message-Id": "<CAGkcA6KLq8q4bETj8+BhMLms1JrvaJ+5SvJVVz+u_Ok0y=iEoA@mail.gmail.com>",
+    "References": []
+  },
+  "id": "br57kcekhf1hsjq04y8aonkit",
+  "labels": [
+    {
+      "display_name": "Important",
+      "id": "a1ytpbvawxfaqua671478g1q0",
+      "name": "important"
+    },
+    {
+      "display_name": "Inbox",
+      "id": "atamsqdb355jqyj0zhhatu3ao",
+      "name": "inbox"
+    }
+  ],
+  "object": "message",
+  "reply_to": [],
+  "snippet": "Body",
+  "starred": true,
+  "subject": "Subject",
+  "thread_id": "8r5awu0esbg8ct3wg5rj5sifp",
+  "to": [
+    {
+      "email": "to@example.org",
+      "name": "To Name"
+    }
+  ],
+  "unread": true
+}`)

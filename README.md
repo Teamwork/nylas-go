@@ -102,9 +102,9 @@ The following features are implemented in the client:
 ### Messages
 
 - [x] GET	/messages
-- [ ] GET	/messages/{id}
+- [x] GET	/messages/{id}
 - [ ] PUT	/messages/{id}
-- [ ] GET	/messages/{id} (raw message content)
+- [x] GET	/messages/{id} (raw message content)
 
 ### Folders
 
