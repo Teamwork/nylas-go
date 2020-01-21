@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLastestDeltaCursor(t *testing.T) {
@@ -99,8 +101,8 @@ func TestDeltas(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("DeltaResponse:\ngot:\n%+v\nwant:\n%+v", got, want)
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("DeltaResponse: (-got +want):\n%s", diff)
 	}
 }
 

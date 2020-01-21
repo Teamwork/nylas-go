@@ -80,22 +80,22 @@ The following features are implemented in the client:
 
 #### Account Management
 
-- [ ] GET		/a/{client_id}/accounts
-- [ ] GET		/a/{client_id}/accounts/{id}
-- [ ] POST		/a/{client_id}/accounts/{id}/downgrade
-- [ ] POST		/a/{client_id}/accounts/{id}/upgrade
-- [ ] POST		/a/{client_id}/accounts/{id}/revoke-all
-- [ ] GET		/a/{client_id}/ip_addresses
-- [ ] POST		/a/{client_id}/accounts/{id}/token-info
+- [ ] GET	/a/{client_id}/accounts
+- [ ] GET	/a/{client_id}/accounts/{id}
+- [ ] POST	/a/{client_id}/accounts/{id}/downgrade
+- [ ] POST	/a/{client_id}/accounts/{id}/upgrade
+- [ ] POST	/a/{client_id}/accounts/{id}/revoke-all
+- [ ] GET	/a/{client_id}/ip_addresses
+- [ ] POST	/a/{client_id}/accounts/{id}/token-info
 
 #### Application Management
 
-- [ ] GET		/a/{client_id}
-- [ ] POST		/a/{client_id}
+- [ ] GET	/a/{client_id}
+- [ ] POST	/a/{client_id}
 
 ### Threads
 
-- [ ] GET	/threads
+- [x] GET	/threads
 - [ ] GET	/threads/{id}
 - [ ] PUT	/threads/{id}
 
