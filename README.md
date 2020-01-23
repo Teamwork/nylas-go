@@ -70,8 +70,8 @@ The following features are implemented in the client:
 
 #### Native Authentication
 
-- [ ] POST	/connect/authorize
-- [ ] POST	/connect/token
+- [x] POST	/connect/authorize
+- [x] POST	/connect/token
 
 ### Apps & Accounts
 

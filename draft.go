@@ -14,14 +14,15 @@ type Draft Message
 // send it directly.
 // See: https://docs.nylas.com/reference#drafts
 type DraftRequest struct {
-	Subject string        `json:"subject"`
-	From    []Participant `json:"from"`
-	To      []Participant `json:"to"`
-	CC      []Participant `json:"cc"`
-	BCC     []Participant `json:"bcc"`
-	ReplyTo []Participant `json:"reply_to"`
-	Body    string        `json:"body"`
-	FileIDs []string      `json:"file_ids"`
+	Subject          string        `json:"subject"`
+	From             []Participant `json:"from"`
+	To               []Participant `json:"to"`
+	CC               []Participant `json:"cc"`
+	BCC              []Participant `json:"bcc"`
+	ReplyTo          []Participant `json:"reply_to"`
+	ReplyToMessageID string        `json:"reply_to_message_id,omitempty"`
+	Body             string        `json:"body"`
+	FileIDs          []string      `json:"file_ids"`
 }
 
 // SendDirectly a message without creating a draft first.
