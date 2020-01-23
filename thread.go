@@ -3,6 +3,7 @@ package nylas
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	"github.com/google/go-querystring/query"
 )
@@ -15,7 +16,6 @@ type Thread struct {
 	Object    string `json:"object"`
 	AccountID string `json:"account_id"`
 
-	DraftIDs       []string `json:"draft_ids"`
 	Folders        []Folder `json:"folders"`
 	HasAttachments bool     `json:"has_attachments"`
 
@@ -25,11 +25,15 @@ type Thread struct {
 	LastMessageTimestamp         int64 `json:"last_message_timestamp"`
 
 	MessageIDs []string `json:"message_ids"`
+	DraftIDs   []string `json:"draft_ids"`
+
 	// Only available in expanded view and the body will be missing, see:
 	// https://docs.nylas.com/reference#views
 	Messages []Message `json:"messages"`
+	Drafts   []Message `json:"drafts"`
 
 	Participants []Participant `json:"participants"`
+	Labels       []Label       `json:"labels"`
 	Snippet      string        `json:"snippet"`
 	Starred      bool          `json:"starred"`
 	Subject      string        `json:"subject"`
@@ -95,5 +99,20 @@ func (c *Client) Threads(ctx context.Context, opts *ThreadsOptions) ([]Thread, e
 	}
 
 	var resp []Thread
+	return resp, c.do(req, &resp)
+}
+
+// Thread returns a thread by id.
+func (c *Client) Thread(ctx context.Context, id string, expanded bool) (Thread, error) {
+	req, err := c.newUserRequest(ctx, http.MethodGet, "/threads/"+id, nil)
+	if err != nil {
+		return Thread{}, err
+	}
+
+	if expanded {
+		appendQueryValues(req, url.Values{"view": {ViewExpanded}})
+	}
+
+	var resp Thread
 	return resp, c.do(req, &resp)
 }
