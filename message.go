@@ -137,3 +137,28 @@ func (c *Client) RawMessage(ctx context.Context, id string) ([]byte, error) {
 
 	return ioutil.ReadAll(resp.Body)
 }
+
+// UpdateMessageRequest contains the request parameters required to update a
+// message.
+type UpdateMessageRequest struct {
+	Unread  *bool `json:"unread,omitempty"`
+	Starred *bool `json:"starred,omitempty"`
+	// FolderID to move this message to.
+	FolderID *string `json:"folder_id,omitempty"`
+	// LabelIDs to overwrite any previous labels with, you must provide
+	// existing labels such as sent/drafts.
+	LabelIDs *[]string `json:"label_ids,omitempty"`
+}
+
+// UpdateMessage updates a message with the id.
+func (c *Client) UpdateMessage(
+	ctx context.Context, id string, updateReq UpdateMessageRequest,
+) (Message, error) {
+	req, err := c.newUserRequest(ctx, http.MethodPut, "/messages/"+id, &updateReq)
+	if err != nil {
+		return Message{}, err
+	}
+
+	var resp Message
+	return resp, c.do(req, &resp)
+}

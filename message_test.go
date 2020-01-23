@@ -2,6 +2,7 @@ package nylas
 
 import (
 	"context"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -215,6 +216,42 @@ Received: by 2002:ab3:5e90:0:0:0:0:0 with SMTP id k16csp2294558TLC;
 
 	if diff := cmp.Diff(got, want); diff != "" {
 		t.Errorf("Message: (-got +want):\n%s", diff)
+	}
+}
+
+func TestUpdateMessage(t *testing.T) {
+	accessToken := "accessToken"
+	wantQuery := url.Values{}
+	id := "8r5awu0esbg8ct3wg5rj5sifp"
+	wantBody := []byte(`{"unread":true,"starred":false,"folder_id":"folderid","label_ids":["label1","label2"]}`)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertQueryParams(t, r, wantQuery)
+		if r.URL.Path != "/messages/"+id {
+			t.Errorf("unexpected path: %v", r.URL.Path)
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("failed to read request body: %v", err)
+		}
+
+		if diff := cmp.Diff(body, wantBody); diff != "" {
+			t.Errorf("Message: (-got +want):\n%s", diff)
+		}
+		_, _ = w.Write(getMessageJSON)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	_, err := client.UpdateMessage(context.Background(), id, UpdateMessageRequest{
+		Unread:   Bool(true),
+		Starred:  Bool(false),
+		FolderID: String("folderid"),
+		LabelIDs: &[]string{"label1", "label2"},
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
 
