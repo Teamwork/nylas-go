@@ -97,8 +97,8 @@ The following features are implemented in the client:
 ### Threads
 
 - [x] GET	/threads
-- [ ] GET	/threads/{id}
-- [ ] PUT	/threads/{id}
+- [x] GET	/threads/{id}
+- [x] PUT	/threads/{id}
 
 ### Messages
 

@@ -66,7 +66,7 @@ type ThreadsOptions struct {
 	// label.
 	In string `url:"in,omitempty"`
 	// Return threads with one or more unread messages
-	Unread   bool   `url:"unread,omitempty"`
+	Unread   *bool  `url:"unread,omitempty"`
 	Filename string `url:"filename,omitempty"`
 	// Return threads whose most recent message was received before this
 	// Unix-based timestamp.
@@ -111,6 +111,31 @@ func (c *Client) Thread(ctx context.Context, id string, expanded bool) (Thread, 
 
 	if expanded {
 		appendQueryValues(req, url.Values{"view": {ViewExpanded}})
+	}
+
+	var resp Thread
+	return resp, c.do(req, &resp)
+}
+
+// UpdateThreadRequest contains the request parameters required to update a
+// thread.
+type UpdateThreadRequest struct {
+	Unread  *bool `json:"unread,omitempty"`
+	Starred *bool `json:"starred,omitempty"`
+	// FolderID to move this thread to.
+	FolderID *string `json:"folder_id,omitempty"`
+	// LabelIDs to overwrite any previous labels with, you must provide
+	// existing labels such as sent/drafts.
+	LabelIDs *[]string `json:"label_ids,omitempty"`
+}
+
+// UpdateThread updates a thread with the id.
+func (c *Client) UpdateThread(
+	ctx context.Context, id string, updateReq UpdateThreadRequest,
+) (Thread, error) {
+	req, err := c.newUserRequest(ctx, http.MethodPut, "/threads/"+id, &updateReq)
+	if err != nil {
+		return Thread{}, err
 	}
 
 	var resp Thread

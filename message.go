@@ -69,8 +69,8 @@ type MessagesOptions struct {
 	// This parameter supports the name, display_name, or id of a folder or
 	// label.
 	In      string `url:"in,omitempty"`
-	Unread  bool   `url:"unread,omitempty"`
-	Starred bool   `url:"starred,omitempty"`
+	Unread  *bool  `url:"unread,omitempty"`
+	Starred *bool  `url:"starred,omitempty"`
 	// Return messages belonging to a specific thread
 	ThreadID string `url:"thread_id,omitempty"`
 	Filename string `url:"filename,omitempty"`
@@ -78,7 +78,7 @@ type MessagesOptions struct {
 	ReceivedBefore int64 `url:"received_before,omitempty"`
 	// Return messages received after this Unix-based timestamp.
 	ReceivedAfter int64 `url:"received_after,omitempty"`
-	HasAttachment bool  `url:"has_attachment,omitempty"`
+	HasAttachment *bool `url:"has_attachment,omitempty"`
 }
 
 // Messages returns messages which match the filter specified by parameters.

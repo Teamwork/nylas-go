@@ -2,6 +2,7 @@ package nylas
 
 import (
 	"context"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -53,7 +54,7 @@ func TestThreads(t *testing.T) {
 		StartedBefore:     5,
 		Subject:           "subject",
 		To:                "c@example.com",
-		Unread:            true,
+		Unread:            Bool(true),
 		View:              "ids",
 	})
 	if err != nil {
@@ -168,6 +169,42 @@ func TestThread(t *testing.T) {
 
 	if diff := cmp.Diff(got, want); diff != "" {
 		t.Errorf("Thread: (-got +want):\n%s", diff)
+	}
+}
+
+func TestUpdateThread(t *testing.T) {
+	accessToken := "accessToken"
+	wantQuery := url.Values{}
+	id := "8r5awu0esbg8ct3wg5rj5sifp"
+	wantBody := []byte(`{"unread":true,"starred":false,"folder_id":"folderid","label_ids":["label1","label2"]}`)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertQueryParams(t, r, wantQuery)
+		if r.URL.Path != "/threads/"+id {
+			t.Errorf("unexpected path: %v", r.URL.Path)
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("failed to read request body: %v", err)
+		}
+
+		if diff := cmp.Diff(body, wantBody); diff != "" {
+			t.Errorf("Message: (-got +want):\n%s", diff)
+		}
+		_, _ = w.Write(getThreadJSON)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	_, err := client.UpdateThread(context.Background(), id, UpdateThreadRequest{
+		Unread:   Bool(true),
+		Starred:  Bool(false),
+		FolderID: String("folderid"),
+		LabelIDs: &[]string{"label1", "label2"},
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
 
