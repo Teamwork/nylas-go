@@ -109,7 +109,7 @@ The following features are implemented in the client:
 
 ### Folders
 
-- [ ] GET	/folders
+- [x] GET	/folders
 - [ ] GET	/folders/{id}
 - [ ] POST	/folders
 - [ ] PUT	/folders/{id}

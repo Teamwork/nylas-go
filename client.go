@@ -21,6 +21,20 @@ const (
 	ViewIDs      = "ids"
 )
 
+// Label/Folder mailbox name cosntants, for more info see:
+// https://docs.nylas.com/reference#get-labels
+// https://docs.nylas.com/reference#get-folders
+// https://tools.ietf.org/html/rfc6154
+const (
+	MailboxInbox     = "inbox"
+	MailboxAll       = "all"
+	MailboxArchive   = "archive"
+	MailboxDrafts    = "drafts"
+	MailboxSent      = "sent"
+	MailboxSpam      = "spam"
+	MailboxImportant = "important"
+)
+
 // ErrAccessTokenNotSet is returned when Client methods are called that require
 // an access token to be set.
 var ErrAccessTokenNotSet = errors.New("access token not set on client")

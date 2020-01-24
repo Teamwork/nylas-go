@@ -7,18 +7,6 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-// Label name cosntants, for more info see:
-// https://docs.nylas.com/reference#get-labels
-const (
-	LabelInbox     = "inbox"
-	LabelAll       = "all"
-	LabelArchive   = "archive"
-	LabelDrafts    = "drafts"
-	LabelSent      = "sent"
-	LabelSpam      = "spam"
-	LabelImportant = "important"
-)
-
 // Label represents a label in the Nylas system.
 type Label struct {
 	ID        string `json:"id"`
@@ -29,7 +17,7 @@ type Label struct {
 	DisplayName string `json:"display_name"`
 
 	// Standard categories type, based on RFC-6154, can be one of the
-	// Label* constants, e.g LabelInbox or empty if user created.
+	// Mailbox* constants, e.g MailboxInbox or empty if user created.
 	// See: https://tools.ietf.org/html/rfc6154
 	Name string `json:"name"`
 }
