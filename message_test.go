@@ -34,6 +34,7 @@ func TestMessages(t *testing.T) {
 	}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/messages")
 		assertQueryParams(t, r, wantQuery)
 		_, _ = w.Write(messagesJSON)
 	}))
@@ -119,10 +120,9 @@ func TestMessage(t *testing.T) {
 	id := "br57kcekhf1hsjq04y8aonkit"
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/messages/"+id)
 		assertQueryParams(t, r, wantQuery)
-		if r.URL.Path != "/messages/"+id {
-			t.Errorf("unexpected path: %v", r.URL.Path)
-		}
+
 		_, _ = w.Write(getMessageJSON)
 	}))
 	defer ts.Close()
@@ -198,9 +198,8 @@ Received: by 2002:ab3:5e90:0:0:0:0:0 with SMTP id k16csp2294558TLC;
 .......`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
-		if r.URL.Path != "/messages/"+id {
-			t.Errorf("unexpected path: %v", r.URL.Path)
-		}
+		assertMethodPath(t, r, http.MethodGet, "/messages/"+id)
+
 		if v := r.Header.Get("Accept"); v != "message/rfc822" {
 			t.Errorf("missing/incorrect accept header: %v", v)
 		}
@@ -226,10 +225,8 @@ func TestUpdateMessage(t *testing.T) {
 	wantBody := []byte(`{"unread":true,"starred":false,"folder_id":"folderid","label_ids":["label1","label2"]}`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodPut, "/messages/"+id)
 		assertQueryParams(t, r, wantQuery)
-		if r.URL.Path != "/messages/"+id {
-			t.Errorf("unexpected path: %v", r.URL.Path)
-		}
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -237,7 +234,7 @@ func TestUpdateMessage(t *testing.T) {
 		}
 
 		if diff := cmp.Diff(body, wantBody); diff != "" {
-			t.Errorf("Message: (-got +want):\n%s", diff)
+			t.Errorf("req body: (-got +want):\n%s", diff)
 		}
 		_, _ = w.Write(getMessageJSON)
 	}))

@@ -25,8 +25,16 @@ func assertBasicAuth(t *testing.T, r *http.Request, user, pass string) {
 }
 
 func assertQueryParams(t *testing.T, r *http.Request, want url.Values) {
+	t.Helper()
 	got := r.URL.Query()
 	if diff := cmp.Diff(got, want); diff != "" {
 		t.Errorf("query params: (-got +want):\n%s", diff)
+	}
+}
+
+func assertMethodPath(t *testing.T, r *http.Request, method, path string) {
+	t.Helper()
+	if r.Method != method || r.URL.Path != path {
+		t.Errorf("req: got %v %v; want %v %v", r.Method, r.URL.Path, method, path)
 	}
 }

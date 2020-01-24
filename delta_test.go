@@ -16,6 +16,7 @@ func TestLastestDeltaCursor(t *testing.T) {
 	wantCursor := "aqb0llc2ioo0***"
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodPost, "/delta/latest_cursor")
 		fmt.Fprintf(w, `{"cursor": "%s"}`, wantCursor)
 	}))
 	defer ts.Close()
@@ -40,6 +41,7 @@ func TestDeltas(t *testing.T) {
 	}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/delta")
 		assertQueryParams(t, r, wantQuery)
 		_, _ = w.Write(deltaJSON)
 	}))

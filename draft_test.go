@@ -15,6 +15,7 @@ func TestSendDirectly(t *testing.T) {
 	wantBody := []byte(`{"subject":"Subject","from":[{"email":"from@example.org","name":"From Name"}],"to":[{"email":"to@example.org","name":"To Name"}],"cc":[{"email":"to@example.org","name":"To Name"}],"bcc":[{"email":"to@example.org","name":"To Name"}],"reply_to":[{"email":"replyto@example.org","name":"ReplyTo Name"}],"body":"body","file_ids":["fileid1","fileid2"]}`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodPost, "/send")
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -22,7 +23,7 @@ func TestSendDirectly(t *testing.T) {
 		}
 
 		if diff := cmp.Diff(body, wantBody); diff != "" {
-			t.Errorf("Message: (-got +want):\n%s", diff)
+			t.Errorf("req body: (-got +want):\n%s", diff)
 		}
 		_, _ = w.Write(getMessageJSON)
 	}))

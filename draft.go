@@ -28,7 +28,7 @@ type DraftRequest struct {
 // SendDirectly a message without creating a draft first.
 // See: https://docs.nylas.com/reference#sending-directly
 func (c *Client) SendDirectly(ctx context.Context, draftRequest DraftRequest) (Message, error) {
-	req, err := c.newUserRequest(ctx, http.MethodPost, "/send#directly", &draftRequest)
+	req, err := c.newUserRequest(ctx, http.MethodPost, "/send", &draftRequest)
 	if err != nil {
 		return Message{}, err
 	}

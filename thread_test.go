@@ -33,6 +33,7 @@ func TestThreads(t *testing.T) {
 	}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/threads")
 		assertQueryParams(t, r, wantQuery)
 		_, _ = w.Write(threadsJSON)
 	}))
@@ -111,10 +112,9 @@ func TestThread(t *testing.T) {
 	id := "8r5awu0esbg8ct3wg5rj5sifp"
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/threads/"+id)
 		assertQueryParams(t, r, wantQuery)
-		if r.URL.Path != "/threads/"+id {
-			t.Errorf("unexpected path: %v", r.URL.Path)
-		}
+
 		_, _ = w.Write(getThreadJSON)
 	}))
 	defer ts.Close()
@@ -179,10 +179,8 @@ func TestUpdateThread(t *testing.T) {
 	wantBody := []byte(`{"unread":true,"starred":false,"folder_id":"folderid","label_ids":["label1","label2"]}`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodPut, "/threads/"+id)
 		assertQueryParams(t, r, wantQuery)
-		if r.URL.Path != "/threads/"+id {
-			t.Errorf("unexpected path: %v", r.URL.Path)
-		}
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -190,7 +188,7 @@ func TestUpdateThread(t *testing.T) {
 		}
 
 		if diff := cmp.Diff(body, wantBody); diff != "" {
-			t.Errorf("Message: (-got +want):\n%s", diff)
+			t.Errorf("req body: (-got +want):\n%s", diff)
 		}
 		_, _ = w.Write(getThreadJSON)
 	}))
