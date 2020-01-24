@@ -77,7 +77,7 @@ The following features are implemented in the client:
 
 #### Accounts
 
-- [ ] GET	/account
+- [x] GET	/account
 
 #### Account Management
 
