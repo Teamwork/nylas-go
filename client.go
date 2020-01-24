@@ -142,6 +142,10 @@ func appendQueryValues(req *http.Request, values url.Values) {
 	req.URL.RawQuery = q.Encode()
 }
 
+type countResponse struct {
+	Count int `json:"count"`
+}
+
 // Bool returns a pointer to the given bool value.
 func Bool(v bool) *bool { return &v }
 

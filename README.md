@@ -117,7 +117,7 @@ The following features are implemented in the client:
 
 ### Labels
 
-- [ ] GET	/labels
+- [x] GET	/labels
 - [ ] GET	/labels/{id}
 - [ ] POST	/labels
 - [ ] PUT	/labels/{id}
