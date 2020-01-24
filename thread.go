@@ -103,6 +103,7 @@ func (c *Client) Threads(ctx context.Context, opts *ThreadsOptions) ([]Thread, e
 }
 
 // Thread returns a thread by id.
+// See: https://docs.nylas.com/reference#threadsid
 func (c *Client) Thread(ctx context.Context, id string, expanded bool) (Thread, error) {
 	req, err := c.newUserRequest(ctx, http.MethodGet, "/threads/"+id, nil)
 	if err != nil {
@@ -130,6 +131,7 @@ type UpdateThreadRequest struct {
 }
 
 // UpdateThread updates a thread with the id.
+// See: https://docs.nylas.com/reference#threadsid-1
 func (c *Client) UpdateThread(
 	ctx context.Context, id string, updateReq UpdateThreadRequest,
 ) (Thread, error) {

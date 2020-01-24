@@ -102,6 +102,7 @@ func (c *Client) Messages(ctx context.Context, opts *MessagesOptions) ([]Message
 }
 
 // Message returns a message by id.
+// See: https://docs.nylas.com/reference#messagesid
 func (c *Client) Message(ctx context.Context, id string, expanded bool) (Message, error) {
 	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages/"+id, nil)
 	if err != nil {
@@ -117,6 +118,7 @@ func (c *Client) Message(ctx context.Context, id string, expanded bool) (Message
 }
 
 // RawMessage returns the raw message in RFC-2822 format.
+// See: https://docs.nylas.com/reference#raw-message-contents
 func (c *Client) RawMessage(ctx context.Context, id string) ([]byte, error) {
 	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages/"+id, nil)
 	if err != nil {
@@ -151,6 +153,7 @@ type UpdateMessageRequest struct {
 }
 
 // UpdateMessage updates a message with the id.
+// See: https://docs.nylas.com/reference#messagesid-1
 func (c *Client) UpdateMessage(
 	ctx context.Context, id string, updateReq UpdateMessageRequest,
 ) (Message, error) {
