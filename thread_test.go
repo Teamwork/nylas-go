@@ -106,6 +106,35 @@ func TestThreads(t *testing.T) {
 	}
 }
 
+func TestThreadsCount(t *testing.T) {
+	accessToken := "accessToken"
+	wantQuery := url.Values{
+		"to":   {"c@example.com"},
+		"view": {ViewCount},
+	}
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/threads")
+		assertQueryParams(t, r, wantQuery)
+		_, _ = w.Write([]byte(`{"count":8}`))
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.ThreadsCount(context.Background(), &ThreadsOptions{
+		To: "c@example.com",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := 8
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("count: (-got +want):\n%s", diff)
+	}
+}
+
 func TestThread(t *testing.T) {
 	accessToken := "accessToken"
 	wantQuery := url.Values{}

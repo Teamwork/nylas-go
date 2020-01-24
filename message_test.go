@@ -112,6 +112,36 @@ func TestMessages(t *testing.T) {
 	}
 }
 
+func TestMessagesCount(t *testing.T) {
+	accessToken := "accessToken"
+	wantQuery := url.Values{
+		"unread": {"true"},
+		"view":   {ViewCount},
+	}
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/messages")
+		assertQueryParams(t, r, wantQuery)
+		_, _ = w.Write([]byte(`{"count":1}`))
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.MessagesCount(context.Background(), &MessagesOptions{
+		Unread: Bool(true),
+		View:   "ids",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := 1
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("count: (-got +want):\n%s", diff)
+	}
+}
+
 func TestMessage(t *testing.T) {
 	accessToken := "accessToken"
 	wantQuery := url.Values{

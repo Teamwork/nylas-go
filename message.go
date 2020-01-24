@@ -101,6 +101,29 @@ func (c *Client) Messages(ctx context.Context, opts *MessagesOptions) ([]Message
 	return resp, c.do(req, &resp)
 }
 
+// MessagesCount returns the count of messages which match the filter specified by
+// parameters.
+// See: https://docs.nylas.com/reference#messages-1
+func (c *Client) MessagesCount(ctx context.Context, opts *MessagesOptions) (int, error) {
+	req, err := c.newUserRequest(ctx, http.MethodGet, "/messages", nil)
+	if err != nil {
+		return 0, err
+	}
+
+	if opts == nil {
+		opts = &MessagesOptions{}
+	}
+	opts.View = ViewCount
+	vs, err := query.Values(opts)
+	if err != nil {
+		return 0, err
+	}
+	appendQueryValues(req, vs)
+
+	var resp countResponse
+	return resp.Count, c.do(req, &resp)
+}
+
 // Message returns a message by id.
 // See: https://docs.nylas.com/reference#messagesid
 func (c *Client) Message(ctx context.Context, id string, expanded bool) (Message, error) {

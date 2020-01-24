@@ -102,6 +102,29 @@ func (c *Client) Threads(ctx context.Context, opts *ThreadsOptions) ([]Thread, e
 	return resp, c.do(req, &resp)
 }
 
+// ThreadsCount returns the count of threads which match the filter specified by
+// parameters.
+// See: https://docs.nylas.com/reference#get-threads
+func (c *Client) ThreadsCount(ctx context.Context, opts *ThreadsOptions) (int, error) {
+	req, err := c.newUserRequest(ctx, http.MethodGet, "/threads", nil)
+	if err != nil {
+		return 0, err
+	}
+
+	if opts == nil {
+		opts = &ThreadsOptions{}
+	}
+	opts.View = ViewCount
+	vs, err := query.Values(opts)
+	if err != nil {
+		return 0, err
+	}
+	appendQueryValues(req, vs)
+
+	var resp countResponse
+	return resp.Count, c.do(req, &resp)
+}
+
 // Thread returns a thread by id.
 // See: https://docs.nylas.com/reference#threadsid
 func (c *Client) Thread(ctx context.Context, id string, expanded bool) (Thread, error) {
