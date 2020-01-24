@@ -15,7 +15,6 @@ func TestConnectAuthorize(t *testing.T) {
 	clientSecret := "clientSecret"
 	wantBody := []byte(`{"client_id":"clientid","email_address":"email@example.org","name":"Name","provider":"imap","scopes":"email,calendar","settings":{"imap_host":"imap.host","imap_port":993,"imap_username":"imap.user","imap_password":"imap.pass","smtp_host":"smtp.host","smtp_port":465,"smtp_username":"smtp.user","smtp_password":"smtp.pass","ssl_required":true}}`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assertBasicAuth(t, r, clientSecret, "")
 		assertMethodPath(t, r, http.MethodPost, "/connect/authorize")
 
 		body, err := ioutil.ReadAll(r.Body)
@@ -60,7 +59,6 @@ func TestConnectToken(t *testing.T) {
 	clientSecret := "clientSecret"
 	wantBody := []byte(`{"client_id":"clientid","client_secret":"clientSecret","code":"code"}`)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assertBasicAuth(t, r, clientSecret, "")
 		assertMethodPath(t, r, http.MethodPost, "/connect/token")
 
 		body, err := ioutil.ReadAll(r.Body)

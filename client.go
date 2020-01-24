@@ -103,7 +103,6 @@ func (c *Client) newRequest(
 	if err != nil {
 		return nil, err
 	}
-	req.SetBasicAuth(c.clientSecret, "")
 
 	if body != nil {
 		data, err := json.Marshal(body)
