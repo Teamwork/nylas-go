@@ -7,6 +7,10 @@
 
 Provides access to the [Nylas Platform](https://docs.nylas.com/reference) v2 REST API.
 
+This library does not currently cover all endpoints and will be implemented as and when they are needed by our internal projects. Check the [GoDoc](https://godoc.org/github.com/teamwork/nylas-go) or [Status](#status) for current implementation status.
+
+This is not an offical SDK for the Nylas Platform, for the offical SDKs visit [Nylas SDKs](https://www.nylas.com/sdks/).
+
 ## Installation
 
 ```
@@ -38,7 +42,7 @@ func main() {
         nylas.WithHTTPClient(&http.Client{
             Timeout: 3 * time.Second,
         }),
-        nylas.WithAccessToken(accessToken),
+        nylas.WithAccessToken(accessToken), // not required for account management endpoints
     )
 
     ctx := context.Background()
@@ -55,6 +59,16 @@ func main() {
     }
 }
 ```
+
+## Examples
+
+See the [examples](example) directory.
+
+## Contributing
+
+We would like to make this library feature complete with the offical SDK projects and contributions are welcome.
+
+Following the existing code style and conventions and submit a PR.
 
 ## Status
 
