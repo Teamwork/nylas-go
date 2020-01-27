@@ -62,7 +62,7 @@ func TestAccounts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	want := []BillingAccount{
+	want := []ManagementAccount{
 		{
 			ID:           "622x1k5v1ujh55t6ucel7av4",
 			AccountID:    "622x1k5v1ujh55t6ucel7av4",

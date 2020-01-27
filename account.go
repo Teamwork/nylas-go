@@ -25,10 +25,10 @@ type Account struct {
 	BillingState string `json:"billing_state"`
 }
 
-// BillingAccount contains the details of an account and is used when working
+// ManagementAccount contains the details of an account and is used when working
 // with the Account Management endpoints.
 // See: https://docs.nylas.com/reference#account-management
-type BillingAccount struct {
+type ManagementAccount struct {
 	ID        string `json:"id"`
 	AccountID string `json:"account_id"`
 
@@ -54,14 +54,14 @@ func (c *Client) Account(ctx context.Context) (Account, error) {
 
 // Accounts returns the account information for all accounts.
 // See: https://docs.nylas.com/reference#aclient_idaccounts
-func (c *Client) Accounts(ctx context.Context) ([]BillingAccount, error) {
+func (c *Client) Accounts(ctx context.Context) ([]ManagementAccount, error) {
 	endpoint := fmt.Sprintf("/a/%s/accounts", c.clientID)
 	req, err := c.newAccountRequest(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var resp []BillingAccount
+	var resp []ManagementAccount
 	return resp, c.do(req, &resp)
 }
 
