@@ -125,15 +125,15 @@ The following features are implemented in the client:
 
 ### Drafts
 
-- [ ] GET	/drafts
-- [ ] GET	/drafts/{id}
-- [ ] POST	/drafts
-- [ ] PUT	/drafts/{id}
-- [ ] DEL	/drafts/{id}
+- [x] GET	/drafts
+- [x] GET	/drafts/{id}
+- [x] POST	/drafts
+- [x] PUT	/drafts/{id}
+- [x] DEL	/drafts/{id}
 
 ### Sending
 
-- [ ] POST	/send#drafts
+- [x] POST	/send#drafts
 - [x] POST	/send#directly
 - [ ] POST	/send#raw
 
