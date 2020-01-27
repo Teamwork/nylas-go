@@ -62,7 +62,7 @@ func main() {
 
 ## Examples
 
-See the [examples](example) directory.
+See the [example directory](example).
 
 ## Contributing
 
