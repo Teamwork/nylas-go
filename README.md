@@ -9,7 +9,7 @@ Provides access to the [Nylas Platform](https://docs.nylas.com/reference) v2 RES
 
 This library does not currently cover all endpoints and will be implemented as and when they are needed by our internal projects. Check the [GoDoc](https://godoc.org/github.com/teamwork/nylas-go) or [Status](#status) for current implementation status.
 
-This is not an offical SDK for the Nylas Platform, for the offical SDKs visit [Nylas SDKs](https://www.nylas.com/sdks/).
+This is not an official SDK for the Nylas Platform, for the official SDKs visit [Nylas SDKs](https://www.nylas.com/sdks/).
 
 ## Installation
 
