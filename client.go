@@ -28,6 +28,7 @@ const (
 const (
 	MailboxInbox     = "inbox"
 	MailboxAll       = "all"
+	MailboxTrash     = "trash"
 	MailboxArchive   = "archive"
 	MailboxDrafts    = "drafts"
 	MailboxSent      = "sent"
