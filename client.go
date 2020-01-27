@@ -110,6 +110,17 @@ func (c *Client) newUserRequest(
 	return req, nil
 }
 
+func (c *Client) newAccountRequest(
+	ctx context.Context, method, endpoint string, body interface{},
+) (*http.Request, error) {
+	req, err := c.newRequest(ctx, method, endpoint, body)
+	if err != nil {
+		return nil, err
+	}
+	req.SetBasicAuth(c.clientSecret, "")
+	return req, nil
+}
+
 func (c *Client) newRequest(
 	ctx context.Context, method, endpoint string, body interface{},
 ) (*http.Request, error) {

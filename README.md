@@ -81,11 +81,11 @@ The following features are implemented in the client:
 
 #### Account Management
 
-- [ ] GET	/a/{client_id}/accounts
+- [x] GET	/a/{client_id}/accounts
 - [ ] GET	/a/{client_id}/accounts/{id}
-- [ ] POST	/a/{client_id}/accounts/{id}/downgrade
-- [ ] POST	/a/{client_id}/accounts/{id}/upgrade
-- [ ] POST	/a/{client_id}/accounts/{id}/revoke-all
+- [x] POST	/a/{client_id}/accounts/{id}/downgrade
+- [x] POST	/a/{client_id}/accounts/{id}/upgrade
+- [x] POST	/a/{client_id}/accounts/{id}/revoke-all
 - [ ] GET	/a/{client_id}/ip_addresses
 - [ ] POST	/a/{client_id}/accounts/{id}/token-info
 
