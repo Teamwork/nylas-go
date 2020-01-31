@@ -6,6 +6,14 @@ import (
 	"net/http"
 )
 
+// BillingState constants, for more info see:
+// https://docs.nylas.com/reference#aclient_idaccounts
+const (
+	BillingStateCancelled = "cancelled"
+	BillingStatePaid      = "paid"
+	BillingStateDeleted   = "deleted"
+)
+
 // Account contains the details of an account which corresponds to an email
 // address, mailbox, and optionally a calendar.
 type Account struct {

@@ -21,7 +21,7 @@ const (
 	ViewIDs      = "ids"
 )
 
-// Label/Folder mailbox name cosntants, for more info see:
+// Label/Folder mailbox name constants, for more info see:
 // https://docs.nylas.com/reference#get-labels
 // https://docs.nylas.com/reference#get-folders
 // https://tools.ietf.org/html/rfc6154
