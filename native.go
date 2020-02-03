@@ -118,3 +118,11 @@ type Office365AuthorizeSettings struct {
 
 // Provider returns the provider value to be used in a connect request.
 func (Office365AuthorizeSettings) Provider() string { return "office365" }
+
+// OutlookAuthorizeSettings implements AuthorizeSettings.
+type OutlookAuthorizeSettings struct {
+	Password string `json:"password"`
+}
+
+// Provider returns the provider value to be used in a connect request.
+func (OutlookAuthorizeSettings) Provider() string { return "outlook" }
