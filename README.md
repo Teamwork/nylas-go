@@ -1,7 +1,7 @@
 # Nylas API v2 Go client
 
 [![Build Status](https://travis-ci.com/Teamwork/nylas-go.svg?token=o9pKscgKamFB17WDSzzf&branch=master)](https://travis-ci.com/Teamwork/nylas-go)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/teamwork/nylas-go)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://pkg.go.dev/github.com/teamwork/nylas-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/teamwork/nylas-go)](https://goreportcard.com/report/github.com/teamwork/nylas-go)
 [![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](LICENSE)
 
