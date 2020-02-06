@@ -92,7 +92,7 @@ func WithAccessToken(token string) Option {
 // As returns a copy of the Client with the given access token set.
 func (c *Client) As(accessToken string) *Client {
 	as := *c
-	WithAccessToken(accessToken)(c)
+	WithAccessToken(accessToken)(&as)
 	return &as
 }
 
