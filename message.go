@@ -113,11 +113,11 @@ func (c *Client) MessagesCount(ctx context.Context, opts *MessagesOptions) (int,
 	if opts == nil {
 		opts = &MessagesOptions{}
 	}
-	opts.View = ViewCount
 	vs, err := query.Values(opts)
 	if err != nil {
 		return 0, err
 	}
+	vs.Set("view", ViewCount)
 	appendQueryValues(req, vs)
 
 	var resp countResponse

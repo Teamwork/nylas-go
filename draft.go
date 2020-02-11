@@ -93,11 +93,11 @@ func (c *Client) DraftsCount(ctx context.Context, opts *DraftsOptions) (int, err
 	if opts == nil {
 		opts = &DraftsOptions{}
 	}
-	opts.View = ViewCount
 	vs, err := query.Values(opts)
 	if err != nil {
 		return 0, err
 	}
+	vs.Set("view", ViewCount)
 	appendQueryValues(req, vs)
 
 	var resp countResponse
