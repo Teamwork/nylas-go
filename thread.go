@@ -114,11 +114,11 @@ func (c *Client) ThreadsCount(ctx context.Context, opts *ThreadsOptions) (int, e
 	if opts == nil {
 		opts = &ThreadsOptions{}
 	}
-	opts.View = ViewCount
 	vs, err := query.Values(opts)
 	if err != nil {
 		return 0, err
 	}
+	vs.Set("view", ViewCount)
 	appendQueryValues(req, vs)
 
 	var resp countResponse
