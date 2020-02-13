@@ -14,6 +14,12 @@ const (
 	BillingStateDeleted   = "deleted"
 )
 
+// OrganizationUnit constants specify either "label" or "folder", depending on the provider capabilities.
+const (
+	OrganizationUnitFolder = "folder"
+	OrganizationUnitLabel  = "label"
+)
+
 // Account contains the details of an account which corresponds to an email
 // address, mailbox, and optionally a calendar.
 type Account struct {
