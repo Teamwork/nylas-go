@@ -102,8 +102,9 @@ func (IMAPAuthorizeSettings) Provider() string { return "imap" }
 
 // ExchangeAuthorizeSettings implements AuthorizeSettings.
 type ExchangeAuthorizeSettings struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username      string `json:"username"`
+	Password      string `json:"password"`
+	EASServerHost string `json:"eas_server_host"`
 }
 
 // Provider returns the provider value to be used in a connect request.
