@@ -1,0 +1,84 @@
+package nylas
+
+import (
+	"context"
+	"encoding/base64"
+	"image/png"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"github.com/google/go-cmp/cmp"
+)
+
+const b64TestPNG = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+
+func testPNG() io.Reader {
+	return base64.NewDecoder(base64.StdEncoding, strings.NewReader(b64TestPNG))
+}
+
+func TestUploadFile(t *testing.T) {
+	accessToken := "accessToken"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodPost, "/files")
+
+		mp, err := r.MultipartReader()
+		if err != nil {
+			t.Fatalf("expected multipart: %v", err)
+		}
+
+		p, err := mp.NextPart()
+		if err != nil && err != io.EOF {
+			t.Fatalf("next part: %v", err)
+		}
+		if p == nil || p.FormName() != "file" {
+			t.Fatal("expected single field named \"file\"")
+		}
+
+		wantContentType := "image/png"
+		if ct := p.Header.Get("Content-Type"); ct != wantContentType {
+			t.Errorf("expected Content-Type to be detected, got: %q; want %q",
+				ct, wantContentType)
+		}
+
+		if _, err := png.Decode(p); err != nil {
+			t.Fatalf("part not valid png: %v", err)
+		}
+
+		_, _ = w.Write(uploadFileJSON)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.UploadFile(context.Background(), "test.png", testPNG())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := File{
+		ID:          "8cid1lhd0m7x9k5wjrkpufs1a",
+		Object:      "file",
+		AccountID:   "43jf3n4e***",
+		ContentType: "image/png",
+		Filename:    "test.png",
+		Size:        24429,
+	}
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("Message: (-got +want):\n%s", diff)
+	}
+}
+
+var uploadFileJSON = []byte(`[
+    {
+        "account_id": "43jf3n4e***",
+        "content_type": "image/png",
+        "filename": "test.png",
+        "id": "8cid1lhd0m7x9k5wjrkpufs1a",
+        "object": "file",
+        "size": 24429
+    }
+]`)
