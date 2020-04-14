@@ -133,7 +133,7 @@ func (c *Client) newRequest(
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return nil, fmt.Errorf("marshal body: %v", err)
+			return nil, fmt.Errorf("marshal body: %w", err)
 		}
 		req.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 		req.Header.Add("Content-Type", "application/json; charset=utf")

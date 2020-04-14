@@ -142,7 +142,7 @@ func (c *Client) StreamDeltas(ctx context.Context, cursor string, fn func(Delta)
 
 			var delta Delta
 			if err := json.Unmarshal(line, &delta); err != nil {
-				return fmt.Errorf("unmarshal delta: %q: %v", line, err)
+				return fmt.Errorf("unmarshal delta: %q: %w", line, err)
 			}
 			fn(delta)
 		}
