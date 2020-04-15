@@ -154,8 +154,8 @@ The following features are implemented in the client:
 ### Files
 
 - [ ] GET	/files
-- [ ] GET	/files/{id}
-- [ ] GET	/files/{id}/download
+- [x] GET	/files/{id}
+- [x] GET	/files/{id}/download
 - [x] POST	/files
 - [ ] DEL	/files/{id}
 
