@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"image/png"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -17,6 +18,37 @@ const b64TestPNG = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMA
 
 func testPNG() io.Reader {
 	return base64.NewDecoder(base64.StdEncoding, strings.NewReader(b64TestPNG))
+}
+
+func TestFile(t *testing.T) {
+	accessToken := "accessToken"
+	id := "br57kcekhf1hsjq04y8aonkit"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/files/"+id)
+
+		_, _ = w.Write(getFileJSON)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	got, err := client.File(context.Background(), id)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := File{
+		ID:          "8cid1lhd0m7x9k5wjrkpufs1a",
+		Object:      "file",
+		AccountID:   "43jf3n4e***",
+		ContentType: "image/png",
+		Filename:    "test.png",
+		Size:        24429,
+	}
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("File: (-got +want):\n%s", diff)
+	}
 }
 
 func TestUploadFile(t *testing.T) {
@@ -68,9 +100,46 @@ func TestUploadFile(t *testing.T) {
 	}
 
 	if diff := cmp.Diff(got, want); diff != "" {
-		t.Errorf("Message: (-got +want):\n%s", diff)
+		t.Errorf("File: (-got +want):\n%s", diff)
 	}
 }
+
+func TestDownloadFile(t *testing.T) {
+	accessToken := "accessToken"
+	id := "br57kcekhf1hsjq04y8aonkit"
+	want := []byte(`body`)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodGet, "/files/"+id+"/download")
+
+		_, _ = w.Write(want)
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	file, err := client.DownloadFile(context.Background(), id)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		t.Fatalf("unexpected read error: %v", err)
+	}
+	if diff := cmp.Diff(data, want); diff != "" {
+		t.Errorf("File: (-got +want):\n%s", diff)
+	}
+}
+
+var getFileJSON = []byte(`{
+    "account_id": "43jf3n4e***",
+    "content_type": "image/png",
+    "filename": "test.png",
+    "id": "8cid1lhd0m7x9k5wjrkpufs1a",
+    "object": "file",
+    "size": 24429
+}`)
 
 var uploadFileJSON = []byte(`[
     {
