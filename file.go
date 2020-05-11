@@ -123,3 +123,14 @@ func (c *Client) DownloadFile(ctx context.Context, id string) (io.ReadCloser, er
 	}
 	return resp.Body, nil
 }
+
+// DeleteFile removes an existing file identified by the specified file ID.
+// See: https://docs.nylas.com/reference#files-delete
+func (c *Client) DeleteFile(ctx context.Context, id string) error {
+	endpoint := fmt.Sprintf("/files/%s", id)
+	req, err := c.newUserRequest(ctx, http.MethodDelete, endpoint, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
