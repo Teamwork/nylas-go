@@ -14,9 +14,9 @@ You should see your client ID and client secret on the dashboard,
 once you've logged in on the
 [Nylas Developer](https://developer.nylas.com/) website.
 
-## Update the `main.json` File
+## Update the `main.go` File
 
-Open the `main.json` file in this directory, and replace the example
+Open the `main.go` file in this directory, and replace the example
 client secret with the real values that you got from the Nylas
 Developer dashboard.
 
