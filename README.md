@@ -157,7 +157,7 @@ The following features are implemented in the client:
 - [x] GET	/files/{id}
 - [x] GET	/files/{id}/download
 - [x] POST	/files
-- [ ] DEL	/files/{id}
+- [x] DEL	/files/{id}
 
 ### Calendars
 
