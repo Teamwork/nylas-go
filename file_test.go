@@ -132,6 +132,23 @@ func TestDownloadFile(t *testing.T) {
 	}
 }
 
+func TestDeleteFile(t *testing.T) {
+	accessToken := "accessToken"
+	id := "br57kcekhf1hsjq04y8aonkit"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, accessToken, "")
+		assertMethodPath(t, r, http.MethodDelete, "/files/"+id)
+
+	}))
+	defer ts.Close()
+
+	client := NewClient("", "", withTestServer(ts), WithAccessToken(accessToken))
+	err := client.DeleteFile(context.Background(), id)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 var getFileJSON = []byte(`{
     "account_id": "43jf3n4e***",
     "content_type": "image/png",
