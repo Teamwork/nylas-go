@@ -45,8 +45,9 @@ type Client struct {
 	clientID, clientSecret string
 	accessToken            string
 
-	baseURL string
-	c       *http.Client
+	baseURL      string
+	c            *http.Client
+	errorHandler func(e error) error
 }
 
 // Option sets an optional setting on the Client.
@@ -78,6 +79,13 @@ func WithHTTPClient(httpClient *http.Client) Option {
 func WithBaseURL(baseURL string) Option {
 	return func(c *Client) {
 		c.baseURL = baseURL
+	}
+}
+
+// WithErrorHandler returns an Option to set the error handler to be used.
+func WithErrorHandler(f func(e error) error) Option {
+	return func(c *Client) {
+		c.errorHandler = f
 	}
 }
 
@@ -149,7 +157,11 @@ func (c *Client) do(req *http.Request, v interface{}) error {
 	defer resp.Body.Close() // nolint: errcheck
 
 	if resp.StatusCode >= 299 {
-		return NewError(resp)
+		e := NewError(resp)
+		if c.errorHandler != nil {
+			return c.errorHandler(e)
+		}
+		return e
 	}
 
 	if v != nil {
