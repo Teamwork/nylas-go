@@ -56,6 +56,9 @@ type DraftsOptions struct {
 	Limit  int    `url:"limit,omitempty"`
 	Offset int    `url:"offset,omitempty"`
 
+	// Return messages belonging to a specific thread
+	ThreadID string `url:"thread_id,omitempty"`
+
 	// Return drafts that have been sent or received from the list of
 	// email addresses. A maximum of 25 emails may be specified
 	AnyEmail []string `url:"any_email,comma,omitempty"`
