@@ -21,9 +21,11 @@ type File struct {
 	Object    string `json:"object"`
 	AccountID string `json:"account_id"`
 
-	ContentType string `json:"content_type"`
-	Filename    string `json:"filename"`
-	Size        int    `json:"size"`
+	ContentType        string `json:"content_type"`
+	ContentID          string `json:"content_id"`
+	ContentDisposition string `json:"content_disposition"`
+	Filename           string `json:"filename"`
+	Size               int    `json:"size"`
 }
 
 var quoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")

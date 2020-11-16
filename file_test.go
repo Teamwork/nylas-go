@@ -38,12 +38,14 @@ func TestFile(t *testing.T) {
 	}
 
 	want := File{
-		ID:          "8cid1lhd0m7x9k5wjrkpufs1a",
-		Object:      "file",
-		AccountID:   "43jf3n4e***",
-		ContentType: "image/png",
-		Filename:    "test.png",
-		Size:        24429,
+		ID:                 "8cid1lhd0m7x9k5wjrkpufs1a",
+		Object:             "file",
+		AccountID:          "43jf3n4e***",
+		ContentType:        "image/png",
+		Filename:           "test.png",
+		ContentDisposition: "inline",
+		ContentID:          "abkhjghgjghkjf476387",
+		Size:               24429,
 	}
 
 	if diff := cmp.Diff(got, want); diff != "" {
@@ -152,6 +154,8 @@ func TestDeleteFile(t *testing.T) {
 var getFileJSON = []byte(`{
     "account_id": "43jf3n4e***",
     "content_type": "image/png",
+    "content_disposition": "inline",
+    "content_id": "abkhjghgjghkjf476387",
     "filename": "test.png",
     "id": "8cid1lhd0m7x9k5wjrkpufs1a",
     "object": "file",
