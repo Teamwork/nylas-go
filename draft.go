@@ -30,9 +30,19 @@ type DraftRequest struct {
 	ReplyToMessageID string        `json:"reply_to_message_id,omitempty"`
 	Body             string        `json:"body"`
 	FileIDs          []string      `json:"file_ids"`
+	Tracking         *Tracking     `json:"tracking,omitempty"`
 }
 
-// UpdateDraftRequest contains the request parameters requiredto update a draft.
+// Tracking contains the requst parameters required to track an email
+// See: https://docs.nylas.com/docs/message-tracking
+type Tracking struct {
+	Links         bool   `json:"links,omitempty"`
+	Opens         bool   `json:"opens,omitempty"`
+	ThreadReplies bool   `json:"thread_replies,omitempty"`
+	Payload       string `json:"payload,omitempty"`
+}
+
+// UpdateDraftRequest contains the request parameters required to update a draft.
 //
 // Version is required to specify the version of the draft you wish to update,
 // other fields are optional and will overwrite previous values if given.
