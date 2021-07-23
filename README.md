@@ -161,8 +161,8 @@ The following features are implemented in the client:
 
 ### Calendars
 
-- [ ] GET	/calendars
-- [ ] GET	/calendars/{id}
+- [x] GET	/calendars
+- [x] GET	/calendars/{id}
 - [ ] POST	/calendars/free-busy
 
 
