@@ -168,8 +168,8 @@ The following features are implemented in the client:
 
 ### Events
 
-- [ ] GET	/events
-- [ ] GET	/events/{id}
+- [x] GET	/events
+- [x] GET	/events/{id}
 - [ ] POST	/events
 - [ ] PUT	/events/{id}
 - [ ] DEL	/events/{id}
