@@ -97,6 +97,7 @@ The following features are implemented in the client:
 
 - [x] GET	/a/{client_id}/accounts
 - [ ] GET	/a/{client_id}/accounts/{id}
+- [x] DEL	/a/{client_id}/accounts/{id}
 - [x] POST	/a/{client_id}/accounts/{id}/downgrade
 - [x] POST	/a/{client_id}/accounts/{id}/upgrade
 - [x] POST	/a/{client_id}/accounts/{id}/revoke-all

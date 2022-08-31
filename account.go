@@ -79,8 +79,19 @@ func (c *Client) Accounts(ctx context.Context) ([]ManagementAccount, error) {
 	return resp, c.do(req, &resp)
 }
 
-// CancelAccount cancels a paid account.
-// See: https://docs.nylas.com/reference#cancel-an-account
+// DeleteAccount deletes an account. Accounts deleted using this method are immediately unavailable.
+// See: https://developer.nylas.com/docs/api/#delete/a/client_id/accounts/id
+func (c *Client) DeleteAccount(ctx context.Context, id string) error {
+	endpoint := fmt.Sprintf("/a/%s/accounts/%s", c.clientID, id)
+	req, err := c.newAccountRequest(ctx, http.MethodDelete, endpoint, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// CancelAccount cancels a paid account. Accounts that are cancelled instead of deleted, can be recovered within 3 days.
+// See: https://developer.nylas.com/docs/api/#post/a/client_id/accounts/id/downgrade
 func (c *Client) CancelAccount(ctx context.Context, id string) error {
 	endpoint := fmt.Sprintf("/a/%s/accounts/%s/downgrade", c.clientID, id)
 	req, err := c.newAccountRequest(ctx, http.MethodPost, endpoint, nil)

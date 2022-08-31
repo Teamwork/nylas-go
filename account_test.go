@@ -86,6 +86,24 @@ func TestAccounts(t *testing.T) {
 	}
 }
 
+func TestDeleteAccount(t *testing.T) {
+	clientID := "clientID"
+	clientSecret := "clientSecret"
+	accountID := "accountID"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assertBasicAuth(t, r, clientSecret, "")
+		wantPath := fmt.Sprintf("/a/%s/accounts/%s", clientID, accountID)
+		assertMethodPath(t, r, http.MethodDelete, wantPath)
+	}))
+	defer ts.Close()
+
+	client := NewClient(clientID, clientSecret, withTestServer(ts))
+	err := client.DeleteAccount(context.Background(), accountID)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 func TestCancelAccount(t *testing.T) {
 	clientID := "clientID"
 	clientSecret := "clientSecret"
